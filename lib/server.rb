@@ -68,6 +68,8 @@ class Server
       info "Doing some work"
       sleep(1)  # in real life, something productive would happen here
       redis = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
+      redis2 = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
+
       subChannel = "rubycon"
       pubChannel = "rubycon-resp"
 
@@ -90,7 +92,6 @@ class Server
           end
 
           info "TYPE: #{data['type']}, UUID: #{data['uuid']}"
-          redis2 = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
           response = "Something went wrong, couldn't complete your request"
 
           # Write a ruby file to be run
@@ -103,6 +104,11 @@ class Server
 
             Open3.popen3("./ruby.sh", scriptName) do |stdin, stdout, stderr, wait_thr|
               response = stdout.read
+
+              error = stderr.read
+              if !error.empty?
+                response += error
+              end
             end
 
             redis2.publish(pubChannel, JSON.generate({
@@ -116,6 +122,26 @@ class Server
 
             # Move the file after running
             #File.rename "src/" + scriptName, "old/" + scriptName
+          end
+
+          # Run the RI
+          if data["type"] == "ri"
+            info "Running Documentation"
+
+            Open3.popen3("./ri.sh", "#{data['body']}") do |stdin, stdout, stderr, wait_thr|
+              response = stdout.read
+
+              error = stderr.read.to_s
+              if !error.empty?
+                response += error.to_s
+              end
+            end
+
+            redis2.publish(pubChannel, JSON.generate({
+              :uuid => data["uuid"],
+              :body => response,
+              :type => data["type"]
+            }))
           end
 
           # health check, ping pong
