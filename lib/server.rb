@@ -89,7 +89,7 @@ class Server
             }))
           end
 
-          info "UUID: #{data['uuid']}"
+          info "TYPE: #{data['type']}, UUID: #{data['uuid']}"
           redis2 = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
           response = "Something went wrong, couldn't complete your request"
 
