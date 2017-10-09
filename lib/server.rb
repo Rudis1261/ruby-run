@@ -132,7 +132,9 @@ class Server
             }))
 
             # Remove file
-            File.delete "src/" + scriptName
+            if File.exists "src/" + scriptName
+              File.delete "src/" + scriptName
+            end
 
             # Move the file after running
             #File.rename "src/" + scriptName, "old/" + scriptName
