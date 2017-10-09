@@ -18,6 +18,7 @@ RUN rm /bin/chown
 RUN rm /bin/ps
 RUN rm /bin/kill
 RUN rm /bin/pwd
+RUN rm /bin/ls
 RUN rm /usr/bin/passwd
 
 RUN rm /bin/rm
