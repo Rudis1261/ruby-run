@@ -19,6 +19,24 @@ RUN rm /bin/ps
 RUN rm /bin/kill
 RUN rm /bin/pwd
 RUN rm /bin/ls
+RUN rm /bin/cp
+RUN rm /bin/mv
+RUN rm /bin/dd
+RUN rm /bin/cat
+RUN rm /bin/grep
+RUN rm /bin/gzip
+RUN rm /bin/gunzip
+RUN rm /bin/mkdir
+RUN rm /bin/touch
+RUN rm /bin/ln
+RUN rm /bin/rmdir
+RUN rm /bin/stat
+RUN rm /bin/sed
+RUN rm /bin/tar
+RUN rm /bin/watch
+RUN rm /bin/uname
+RUN rm /bin/sleep
+
 RUN rm /usr/bin/passwd
 
 RUN rm /bin/rm
