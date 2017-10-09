@@ -33,6 +33,19 @@ class Server
     options[:logfile]
   end
 
+  def working_dir
+    options[:working_dir]
+  end
+
+  def working_dir?
+    !working_dir.nil?
+  end
+
+  def change_working_dir
+    info "Setting working directory #{working_dir}"
+    Dir.chdir working_dir
+  end
+
   def pidfile
     options[:pidfile]
   end
@@ -55,6 +68,7 @@ class Server
 
     check_pid
     daemonize if daemonize?
+    change_working_dir if working_dir?
     write_pid
     trap_signals
 
@@ -65,7 +79,7 @@ class Server
     end
 
     while !quit
-      info "Doing some work"
+      info "Starting server"
       sleep(1)  # in real life, something productive would happen here
       redis = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
       redis2 = Redis.new(host: "127.0.0.1", port: 6379, :driver => :hiredis)
@@ -164,7 +178,6 @@ class Server
 
     end
     info "Finished"
-
   end
 
   #==========================================================================
@@ -175,7 +188,6 @@ class Server
     exit if fork
     Process.setsid
     exit if fork
-    #Dir.chdir "/"
   end
 
   def redirect_output
