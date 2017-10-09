@@ -132,7 +132,7 @@ class Server
             }))
 
             # Remove file
-            if File.exists "src/" + scriptName
+            if File.exists? "src/" + scriptName
               File.delete "src/" + scriptName
             end
 
